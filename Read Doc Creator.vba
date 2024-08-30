@@ -406,7 +406,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 End Sub
 
 ' Sub procedure 3 of 6: Delete Highlighting in "For Reference" Cards
-Sub DeleteForReferenceCardHighlighting(Doc As Document, ForReferenceHighlightingColor As String)
+Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighlightingColor As String)
 	Dim ForReferenceHighlightingColorEnum As Long
 	' This code for converting highlighting color to enum is from Verbatim 6.0.0's "Standardize Highlighting With Exception" functon
 	Select Case ForReferenceHighlightingColor
@@ -449,7 +449,7 @@ Sub DeleteForReferenceCardHighlighting(Doc As Document, ForReferenceHighlighting
 	End Select
 	' End of code based on Verbatim 6.0.0 functions
 	
-	With Doc.Content
+	With TargetDoc.Content
 		With .Find
 			.ClearFormatting
 			.Highlight = True
