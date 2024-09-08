@@ -1,5 +1,5 @@
-' ---Read Doc Creator v2.0.0---
-' Updated on 2024-08-23.
+' ---Read Doc Creator v2.0.1---
+' Updated on 2024-09-07.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
 ' Thanks to Truf for creating and providing the original code for activating invisibility mode! You can find Truf's macros on his website at https://debate-decoded.ghost.io/leveling-up-verbatim/
@@ -271,24 +271,24 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Replace all paragraph marks with highlighted and bolded paragraph marks
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
+		.MatchWildcards = False
 		.Text = "^p"
+		.Replacement.ClearFormatting
 		.Replacement.Text = "^p"
 		.Replacement.Style = "Underline"
-		.Replacement.Highlight = True
 		.Replacement.Font.Bold = True
-		.MatchWildcards = False
+		.Replacement.Highlight = True
 		.Execute Replace:=wdReplaceAll
 	End With
 	
 	' Delete non-highlighted "Normal" text
 	With TargetDoc.Content.Find
 		.ClearFormatting
+		.Text = ""
 		.Style = "Normal"
 		.Highlight = False
 		.Font.Bold = False
 		.Replacement.ClearFormatting
-		.Text = ""
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -296,10 +296,10 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Delete non-highlighted "Underline" text
 	With TargetDoc.Content.Find
 		.ClearFormatting
+		.Text = ""
 		.Style = "Underline"
 		.Highlight = False
 		.Replacement.ClearFormatting
-		.Text = ""
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -307,10 +307,10 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Delete non-highlighted "Emphasis" text
 	With TargetDoc.Content.Find
 		.ClearFormatting
+		.Text = ""
 		.Style = "Emphasis"
 		.Highlight = False
 		.Replacement.ClearFormatting
-		.Text = ""
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -318,8 +318,8 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Remove extra spaces between paragraph marks
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
 		.Text = "^p ^p"
+		.Replacement.ClearFormatting
 		.Replacement.Text = ""
 		.Replacement.Highlight = False
 		.Execute Replace:=wdReplaceAll
@@ -328,10 +328,10 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Remove consecutive spaces in non-highlighted text
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
+		.MatchWildcards = True
 		.Text = "( ){2,}"
 		.Highlight = False
-		.MatchWildcards = True
+		.Replacement.ClearFormatting
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -339,74 +339,76 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Remove spaces at the beginning of paragraphs
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
-		.Text = "^p "
-		.Replacement.Text = "^p"
 		.MatchWildcards = False
+		.Text = "^p "
+		.Replacement.ClearFormatting
+		.Replacement.Text = "^p"
 		.Execute Replace:=wdReplaceAll
 	End With
 	
 	' Remove consecutive paragraph marks in non-highlighted text
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
-		.Text = "^13{1,}"
-		.Replacement.Text = "^p"
 		.MatchWildcards = True
+		.Text = "^13{1,}"
+		.Replacement.ClearFormatting
+		.Replacement.Text = "^p"
 		.Execute Replace:=wdReplaceAll
 	End With
 	
 	If Not UseFastMode Then
-		Dim i As Long
+		Dim CharacterIndexToInspect As Long
 		
 		' Remove line breaks surrounded on both sides by highlighted text
-		Dim para As Paragraph
-		Dim rng As Range
-		Dim highlighted As Boolean
+		Dim TargetDocParagraph As Paragraph
+		Dim RangeOfParagraphToInspect As Range
+		Dim DoesParagraphContainHighlighting As Boolean
 		
-		For Each para In TargetDoc.Paragraphs
-			Set rng = para.Range
-			rng.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark
+		For Each TargetDocParagraph In TargetDoc.Paragraphs
+			Set RangeOfParagraphToInspect = TargetDocParagraph.Range
+			RangeOfParagraphToInspect.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark
 			
 			' Check if the current paragraph contains highlighted text
-			highlighted = False
-			For i = 1 To rng.Characters.Count
-				If rng.Characters(i).HighlightColorIndex <> wdNoHighlight Then
-					highlighted = True
+			DoesParagraphContainHighlighting = False
+			For CharacterIndexToInspect = 1 To RangeOfParagraphToInspect.Characters.Count
+				If RangeOfParagraphToInspect.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
+					DoesParagraphContainHighlighting = True
 					Exit For
 				End If
-			Next i
+			Next CharacterIndexToInspect
 			
 			' Check if the next paragraph exists and contains highlighted text
-			Dim nextHighlighted As Boolean
-			nextHighlighted = False
-			If Not para.Next Is Nothing Then
-				For i = 1 To para.Next.Range.Characters.Count - 1 ' Ignore the paragraph mark
-					If para.Next.Range.Characters(i).HighlightColorIndex <> wdNoHighlight Then
-						nextHighlighted = True
+			Dim DoesFollowingParagraphContainHighlighting As Boolean
+			DoesFollowingParagraphContainHighlighting = False
+			If Not TargetDocParagraph.Next Is Nothing Then
+				For CharacterIndexToInspect = 1 To TargetDocParagraph.Next.Range.Characters.Count - 1 ' Ignore the paragraph mark
+					If TargetDocParagraph.Next.Range.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
+						DoesFollowingParagraphContainHighlighting = True
 						Exit For
 					End If
-				Next i
+				Next CharacterIndexToInspect
 			End If
 			
 			' If both paragraphs contain highlighted text, join them
-			If highlighted And nextHighlighted Then
-				rng.InsertAfter " " ' Insert a space after the current paragraph
-				para.Range.Characters.Last.Delete ' Delete the paragraph mark
+			If DoesParagraphContainHighlighting And DoesFollowingParagraphContainHighlighting Then
+				RangeOfParagraphToInspect.InsertAfter " " ' Insert a space after the current paragraph
+				TargetDocParagraph.Range.Characters.Last.Delete ' Delete the paragraph mark
 			End If
-		Next para
+		Next TargetDocParagraph
 	End If
 	
-	' Clean up and suppress errors
+	' Clean up modified find and replace settings
 	TargetDoc.Content.Find.ClearFormatting
 	TargetDoc.Content.Find.MatchWildcards = False
 	TargetDoc.Content.Find.Replacement.ClearFormatting
+	
+	' Suppress grammar check and spell check
 	TargetDoc.ShowGrammaticalErrors = False
 	TargetDoc.ShowSpellingErrors = False
 End Sub
 
 ' Sub procedure 3 of 6: Delete Highlighting in "For Reference" Cards
-Sub DeleteForReferenceCardHighlighting(Doc As Document, ForReferenceHighlightingColor As String)
+Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighlightingColor As String)
 	Dim ForReferenceHighlightingColorEnum As Long
 	' This code for converting highlighting color to enum is from Verbatim 6.0.0's "Standardize Highlighting With Exception" functon
 	Select Case ForReferenceHighlightingColor
@@ -449,11 +451,11 @@ Sub DeleteForReferenceCardHighlighting(Doc As Document, ForReferenceHighlighting
 	End Select
 	' End of code based on Verbatim 6.0.0 functions
 	
-	With Doc.Content
+	With TargetDoc.Content
 		With .Find
 			.ClearFormatting
-			.Highlight = True
 			.Text = ""
+			.Highlight = True
 			.Replacement.ClearFormatting
 			.Replacement.Text = ""
 			.Format = True
