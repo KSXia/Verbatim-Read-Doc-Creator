@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.0.1---
+' ---Read Doc Creator v2.0.2---
 ' Updated on 2024-09-07.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -370,7 +370,9 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 			
 			' Check if the current paragraph contains highlighted text
 			DoesParagraphContainHighlighting = False
-			For CharacterIndexToInspect = 1 To RangeOfParagraphToInspect.Characters.Count
+			Dim LastCharacterIndexToInspect As Long
+			LastCharacterIndexToInspect = RangeOfParagraphToInspect.Characters.Count
+			For CharacterIndexToInspect = 1 To LastCharacterIndexToInspect
 				If RangeOfParagraphToInspect.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
 					DoesParagraphContainHighlighting = True
 					Exit For
@@ -381,7 +383,9 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 			Dim DoesFollowingParagraphContainHighlighting As Boolean
 			DoesFollowingParagraphContainHighlighting = False
 			If Not TargetDocParagraph.Next Is Nothing Then
-				For CharacterIndexToInspect = 1 To TargetDocParagraph.Next.Range.Characters.Count - 1 ' Ignore the paragraph mark
+				Dim LastCharacterIndexInNextParagraphToInspect As Long
+				LastCharacterIndexInNextParagraphToInspect = TargetDocParagraph.Next.Range.Characters.Count - 1 ' Ignore the paragraph mark
+				For CharacterIndexToInspect = 1 To LastCharacterIndexInNextParagraphToInspect
 					If TargetDocParagraph.Next.Range.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
 						DoesFollowingParagraphContainHighlighting = True
 						Exit For
