@@ -397,10 +397,12 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		Next para
 	End If
 	
-	' Clean up and suppress errors
+	' Clean up modified find and replace settings
 	TargetDoc.Content.Find.ClearFormatting
 	TargetDoc.Content.Find.MatchWildcards = False
 	TargetDoc.Content.Find.Replacement.ClearFormatting
+	
+	' Suppress grammar check and spell check
 	TargetDoc.ShowGrammaticalErrors = False
 	TargetDoc.ShowSpellingErrors = False
 End Sub
