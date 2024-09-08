@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.0.2---
+' ---Read Doc Creator v2.0.3---
 ' Updated on 2024-09-07.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -414,7 +414,7 @@ End Sub
 ' Sub procedure 3 of 6: Delete Highlighting in "For Reference" Cards
 Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighlightingColor As String)
 	Dim ForReferenceHighlightingColorEnum As Long
-	' This code for converting highlighting color to enum is from Verbatim 6.0.0's "Standardize Highlighting With Exception" functon
+	' The following code converting highlighting color to enum is from Verbatim 6.0.0's "Standardize Highlighting With Exception" functon
 	Select Case ForReferenceHighlightingColor
 		Case Is = "None"
 			ForReferenceHighlightingColorEnum = wdNoHighlight
@@ -453,7 +453,7 @@ Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighli
 		Case Else
 			ForReferenceHighlightingColorEnum = wdNoHighlight
 	End Select
-	' End of code based on Verbatim 6.0.0 functions
+	' End of code based on Verbatim 6.0.0's functions
 	
 	With TargetDoc.Content
 		With .Find
