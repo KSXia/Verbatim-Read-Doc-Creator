@@ -271,24 +271,24 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Replace all paragraph marks with highlighted and bolded paragraph marks
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
+		.MatchWildcards = False
 		.Text = "^p"
+		.Replacement.ClearFormatting
 		.Replacement.Text = "^p"
 		.Replacement.Style = "Underline"
-		.Replacement.Highlight = True
 		.Replacement.Font.Bold = True
-		.MatchWildcards = False
+		.Replacement.Highlight = True
 		.Execute Replace:=wdReplaceAll
 	End With
 	
 	' Delete non-highlighted "Normal" text
 	With TargetDoc.Content.Find
 		.ClearFormatting
+		.Text = ""
 		.Style = "Normal"
 		.Highlight = False
 		.Font.Bold = False
 		.Replacement.ClearFormatting
-		.Text = ""
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -296,10 +296,10 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Delete non-highlighted "Underline" text
 	With TargetDoc.Content.Find
 		.ClearFormatting
+		.Text = ""
 		.Style = "Underline"
 		.Highlight = False
 		.Replacement.ClearFormatting
-		.Text = ""
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -307,10 +307,10 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Delete non-highlighted "Emphasis" text
 	With TargetDoc.Content.Find
 		.ClearFormatting
+		.Text = ""
 		.Style = "Emphasis"
 		.Highlight = False
 		.Replacement.ClearFormatting
-		.Text = ""
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -318,8 +318,8 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Remove extra spaces between paragraph marks
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
 		.Text = "^p ^p"
+		.Replacement.ClearFormatting
 		.Replacement.Text = ""
 		.Replacement.Highlight = False
 		.Execute Replace:=wdReplaceAll
@@ -328,10 +328,10 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Remove consecutive spaces in non-highlighted text
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
+		.MatchWildcards = True
 		.Text = "( ){2,}"
 		.Highlight = False
-		.MatchWildcards = True
+		.Replacement.ClearFormatting
 		.Replacement.Text = " "
 		.Execute Replace:=wdReplaceAll
 	End With
@@ -339,20 +339,20 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	' Remove spaces at the beginning of paragraphs
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
-		.Text = "^p "
-		.Replacement.Text = "^p"
 		.MatchWildcards = False
+		.Text = "^p "
+		.Replacement.ClearFormatting
+		.Replacement.Text = "^p"
 		.Execute Replace:=wdReplaceAll
 	End With
 	
 	' Remove consecutive paragraph marks in non-highlighted text
 	With TargetDoc.Content.Find
 		.ClearFormatting
-		.Replacement.ClearFormatting
-		.Text = "^13{1,}"
-		.Replacement.Text = "^p"
 		.MatchWildcards = True
+		.Text = "^13{1,}"
+		.Replacement.ClearFormatting
+		.Replacement.Text = "^p"
 		.Execute Replace:=wdReplaceAll
 	End With
 	
