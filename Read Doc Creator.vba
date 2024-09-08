@@ -454,8 +454,8 @@ Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighli
 	With TargetDoc.Content
 		With .Find
 			.ClearFormatting
-			.Highlight = True
 			.Text = ""
+			.Highlight = True
 			.Replacement.ClearFormatting
 			.Replacement.Text = ""
 			.Format = True
