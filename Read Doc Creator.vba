@@ -357,44 +357,44 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	End With
 	
 	If Not UseFastMode Then
-		Dim i As Long
+		Dim CharacterIndexToInspect As Long
 		
 		' Remove line breaks surrounded on both sides by highlighted text
-		Dim para As Paragraph
-		Dim rng As Range
-		Dim highlighted As Boolean
+		Dim TargetDocParagraph As Paragraph
+		Dim RangeOfParagraphToInspect As Range
+		Dim DoesParagraphContainHighlighting As Boolean
 		
-		For Each para In TargetDoc.Paragraphs
-			Set rng = para.Range
-			rng.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark
+		For Each TargetDocParagraph In TargetDoc.Paragraphs
+			Set RangeOfParagraphToInspect = TargetDocParagraph.Range
+			RangeOfParagraphToInspect.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark
 			
 			' Check if the current paragraph contains highlighted text
-			highlighted = False
-			For i = 1 To rng.Characters.Count
-				If rng.Characters(i).HighlightColorIndex <> wdNoHighlight Then
-					highlighted = True
+			DoesParagraphContainHighlighting = False
+			For CharacterIndexToInspect = 1 To RangeOfParagraphToInspect.Characters.Count
+				If RangeOfParagraphToInspect.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
+					DoesParagraphContainHighlighting = True
 					Exit For
 				End If
-			Next i
+			Next CharacterIndexToInspect
 			
 			' Check if the next paragraph exists and contains highlighted text
-			Dim nextHighlighted As Boolean
-			nextHighlighted = False
-			If Not para.Next Is Nothing Then
-				For i = 1 To para.Next.Range.Characters.Count - 1 ' Ignore the paragraph mark
-					If para.Next.Range.Characters(i).HighlightColorIndex <> wdNoHighlight Then
-						nextHighlighted = True
+			Dim DoesFollowingParagraphContainHighlighting As Boolean
+			DoesFollowingParagraphContainHighlighting = False
+			If Not TargetDocParagraph.Next Is Nothing Then
+				For CharacterIndexToInspect = 1 To TargetDocParagraph.Next.Range.Characters.Count - 1 ' Ignore the paragraph mark
+					If TargetDocParagraph.Next.Range.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
+						DoesFollowingParagraphContainHighlighting = True
 						Exit For
 					End If
-				Next i
+				Next CharacterIndexToInspect
 			End If
 			
 			' If both paragraphs contain highlighted text, join them
-			If highlighted And nextHighlighted Then
-				rng.InsertAfter " " ' Insert a space after the current paragraph
-				para.Range.Characters.Last.Delete ' Delete the paragraph mark
+			If DoesParagraphContainHighlighting And DoesFollowingParagraphContainHighlighting Then
+				RangeOfParagraphToInspect.InsertAfter " " ' Insert a space after the current paragraph
+				TargetDocParagraph.Range.Characters.Last.Delete ' Delete the paragraph mark
 			End If
-		Next para
+		Next TargetDocParagraph
 	End If
 	
 	' Clean up modified find and replace settings
