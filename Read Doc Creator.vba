@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.0.4---
+' ---Read Doc Creator v2.0.5---
 ' Updated on 2024-09-08.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -362,13 +362,13 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		' Remove line breaks surrounded on both sides by highlighted text
 		Dim TargetDocParagraph As Paragraph
 		Dim RangeOfParagraphToInspect As Range
-		Dim DoesParagraphContainHighlighting As Boolean
 		
 		For Each TargetDocParagraph In TargetDoc.Paragraphs
 			Set RangeOfParagraphToInspect = TargetDocParagraph.Range
 			RangeOfParagraphToInspect.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark
 			
 			' Check if the current paragraph contains highlighted text
+			Dim DoesParagraphContainHighlighting As Boolean
 			DoesParagraphContainHighlighting = False
 			Dim LastCharacterIndexToInspect As Long
 			LastCharacterIndexToInspect = RangeOfParagraphToInspect.Characters.Count
