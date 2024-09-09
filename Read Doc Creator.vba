@@ -186,7 +186,7 @@ Sub CreateReadDoc(EnableInvisibilityMode As Boolean, EnableFastInvisibilityMode 
 	
 	If DeleteLinkedCharacterStyles = True Then
 		Dim CurrentLinkedCharacterStyleToDeleteIndex As Integer
-		For CurrentLinkedCharacterStyleToDeleteIndex = 0 to GreatestLinkedCharacterStyleIndex Step 1
+		For CurrentLinkedCharacterStyleToDeleteIndex = 0 To GreatestLinkedCharacterStyleIndex Step 1
 			Dim LinkedCharacterStyleToDelete As Style
 			
 			' Specify the linked style to delete the character variants of.
