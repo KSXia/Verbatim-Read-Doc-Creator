@@ -414,44 +414,58 @@ End Sub
 ' Sub procedure 3 of 6: Delete Highlighting in "For Reference" Cards
 Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighlightingColor As String)
 	Dim ForReferenceHighlightingColorEnum As Long
-	' The following code for converting highlighting color to enum is from Verbatim 6.0.0's "Standardize Highlighting With Exception" functon.
+	' The following code for converting highlighting color name to enum is a modified version of Verbatim 6.0.0's "Standardize Highlighting With Exception" functon.
 	Select Case ForReferenceHighlightingColor
-		Case Is = "None"
-			ForReferenceHighlightingColorEnum = wdNoHighlight
-		Case Is = "Black"
-			ForReferenceHighlightingColorEnum = wdBlack
-		Case Is = "Blue"
-			ForReferenceHighlightingColorEnum = wdBlue
+		' Common highlighting colors:
+		Case Is = "Turquoise"
+			ForReferenceHighlightingColorEnum = wdTurquoise
 		Case Is = "Bright Green"
 			ForReferenceHighlightingColorEnum = wdBrightGreen
-		Case Is = "Dark Blue"
-			ForReferenceHighlightingColorEnum = wdDarkBlue
-		Case Is = "Dark Red"
-			ForReferenceHighlightingColorEnum = wdDarkRed
-		Case Is = "Dark Yellow"
-			ForReferenceHighlightingColorEnum = wdDarkYellow
-		Case Is = "Light Gray"
-			ForReferenceHighlightingColorEnum = wdGray25
-		Case Is = "Dark Gray"
-			ForReferenceHighlightingColorEnum = wdGray50
-		Case Is = "Green"
-			ForReferenceHighlightingColorEnum = wdGreen
+		Case Is = "Yellow"
+			ForReferenceHighlightingColorEnum = wdYellow
+		
+		' Common rehighlighting colors:
 		Case Is = "Pink"
 			ForReferenceHighlightingColorEnum = wdPink
 		Case Is = "Red"
 			ForReferenceHighlightingColorEnum = wdRed
+		
+		' Common "For Reference" highlighting colors:
+		Case Is = "Light Gray"
+			ForReferenceHighlightingColorEnum = wdGray25
+		Case Is = "Dark Gray"
+			ForReferenceHighlightingColorEnum = wdGray50
+		
+		' Other high-contrast highlighting color(s):
+		Case Is = "Dark Yellow"
+			ForReferenceHighlightingColorEnum = wdDarkYellow
+		
+		' Other highlighting colors:
+		Case Is = "Blue"
+			ForReferenceHighlightingColorEnum = wdBlue
+		Case Is = "Dark Blue"
+			ForReferenceHighlightingColorEnum = wdDarkBlue
 		Case Is = "Teal"
 			ForReferenceHighlightingColorEnum = wdTeal
-		Case Is = "Turquoise"
-			ForReferenceHighlightingColorEnum = wdTurquoise
+		Case Is = "Green"
+			ForReferenceHighlightingColorEnum = wdGreen
+		Case Is = "Dark Red"
+			ForReferenceHighlightingColorEnum = wdDarkRed
 		Case Is = "Violet"
 			ForReferenceHighlightingColorEnum = wdViolet
+		Case Is = "Black"
+			ForReferenceHighlightingColorEnum = wdBlack
 		Case Is = "White"
 			ForReferenceHighlightingColorEnum = wdWhite
-		Case Is = "Yellow"
-			ForReferenceHighlightingColorEnum = wdYellow
+		
+		' No highlighting color:
+		Case Is = "None"
+			Exit Sub
+		
+		' The highlighting color name is not a name of any of Word's highlighting colors:
 		Case Else
-			ForReferenceHighlightingColorEnum = wdNoHighlight
+			' ForReferenceHighlightingColorEnum = wdNoHighlight
+			Exit Sub
 	End Select
 	' End of code based on Verbatim 6.0.0's functions.
 	
