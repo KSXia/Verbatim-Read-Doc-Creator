@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.1.1---
+' ---Read Doc Creator v2.1.2---
 ' Updated on 2024-09-08.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -186,7 +186,7 @@ Sub CreateReadDoc(EnableInvisibilityMode As Boolean, EnableFastInvisibilityMode 
 	
 	If DeleteLinkedCharacterStyles = True Then
 		Dim CurrentLinkedCharacterStyleToDeleteIndex As Integer
-		For CurrentLinkedCharacterStyleToDeleteIndex = 0 to GreatestLinkedCharacterStyleIndex Step 1
+		For CurrentLinkedCharacterStyleToDeleteIndex = 0 To GreatestLinkedCharacterStyleIndex Step 1
 			Dim LinkedCharacterStyleToDelete As Style
 			
 			' Specify the linked style to delete the character variants of.
