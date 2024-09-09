@@ -473,8 +473,9 @@ Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighli
 		Case Is = "None"
 			Exit Sub
 		
-		' The highlighting color name is not a name of any of Word's highlighting colors:
+		' Other cases:
 		Case Else
+			' If the highlighting color name is not a name of any of Word's highlighting colors:
 			' ForReferenceHighlightingColorEnum = wdNoHighlight
 			Exit Sub
 	End Select
