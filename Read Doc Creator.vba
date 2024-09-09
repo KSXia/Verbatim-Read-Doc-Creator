@@ -414,7 +414,7 @@ End Sub
 ' Sub procedure 3 of 6: Delete Highlighting in "For Reference" Cards
 Sub DeleteForReferenceCardHighlighting(TargetDoc As Document, ForReferenceHighlightingColor As String)
 	Dim ForReferenceHighlightingColorEnum As Long
-	' The following code converting highlighting color to enum is from Verbatim 6.0.0's "Standardize Highlighting With Exception" functon
+	' The following code for converting highlighting color to enum is from Verbatim 6.0.0's "Standardize Highlighting With Exception" functon
 	Select Case ForReferenceHighlightingColor
 		Case Is = "None"
 			ForReferenceHighlightingColorEnum = wdNoHighlight
