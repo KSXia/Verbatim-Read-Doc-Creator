@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.0.7---
+' ---Read Doc Creator v2.1.0---
 ' Updated on 2024-09-08.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -397,6 +397,17 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 			If DoesParagraphContainHighlighting And DoesFollowingParagraphContainHighlighting Then
 				RangeOfParagraphToInspect.InsertAfter " " ' Insert a space after the current paragraph.
 				TargetDocParagraph.Range.Characters.Last.Delete ' Delete the paragraph mark.
+				
+				' Remove any consecutive non-highlighted spaces the inserted space may have formed.
+				With TargetDoc.Content.Find
+					.ClearFormatting
+					.MatchWildcards = True
+					.Text = "( ){2,}"
+					.Highlight = False
+					.Replacement.ClearFormatting
+					.Replacement.Text = " "
+					.Execute Replace:=wdReplaceAll
+				End With
 			End If
 		Next TargetDocParagraph
 	End If
