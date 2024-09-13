@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.1.3---
+' ---Read Doc Creator v2.1.4---
 ' Updated on 2024-09-12.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
