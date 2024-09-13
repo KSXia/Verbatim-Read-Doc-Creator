@@ -29,7 +29,7 @@ Sub CreateReadDoc(EnableInvisibilityMode As Boolean, EnableFastInvisibilityMode 
 	AutomaticallySaveReadDoc = False
 	
 	' If this macro is set to automatically save the read doc and AutomaticallyCloseSavedReadDoc is set to True, the read doc will automatically be closed after it is saved.
-	AutomaticallyCloseSavedReadDoc = True
+	AutomaticallyCloseSavedReadDoc = False
 	
 	' <<SET THE STYLES TO DELETE HERE!>>
 	' Add the names of styles that you want to delete to the list in the StylesToDelete array. Make sure that the name of the style is in quotation marks and that each term is separated by commas!
