@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.1.3---
+' ---Read Doc Creator v2.1.4---
 ' Updated on 2024-09-12.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -80,7 +80,7 @@ Sub CreateReadDoc(EnableInvisibilityMode As Boolean, EnableFastInvisibilityMode 
 	
 	' ---CHECK VALIDITY OF USER CONFIGURATION---
 	' Check if there is either a prefix or suffix for the read doc name.
-	If ReadDocNamePrefix = "" And ReadDocNameSuffix = "" Then
+	If AutomaticallySaveReadDoc = True And ReadDocNamePrefix = "" And ReadDocNameSuffix = "" Then
 		' If there is neither a prefix nor suffix for the read doc name:
 		MsgBox "You have not set a suffix or prefix to add to the read doc name. Please set one in the macro settings and try again.", Title:="Error in Creating Read Doc"
 		Exit Sub
