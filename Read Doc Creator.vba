@@ -1,5 +1,5 @@
-' ---Read Doc Creator v2.1.4---
-' Updated on 2024-09-12.
+' ---Read Doc Creator v2.1.5---
+' Updated on 2024-09-15.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
 ' Thanks to Truf for creating and providing the original code for activating invisibility mode! You can find Truf's macros on his website at https://debate-decoded.ghost.io/leveling-up-verbatim/
@@ -361,9 +361,8 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		
 		' Remove line breaks surrounded on both sides by highlighted text.
 		Dim TargetDocParagraph As Paragraph
-		Dim RangeOfParagraphToInspect As Range
-		
 		For Each TargetDocParagraph In TargetDoc.Paragraphs
+			Dim RangeOfParagraphToInspect As Range
 			Set RangeOfParagraphToInspect = TargetDocParagraph.Range
 			RangeOfParagraphToInspect.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark.
 			
