@@ -361,9 +361,8 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		
 		' Remove line breaks surrounded on both sides by highlighted text.
 		Dim TargetDocParagraph As Paragraph
-		Dim RangeOfParagraphToInspect As Range
-		
 		For Each TargetDocParagraph In TargetDoc.Paragraphs
+			Dim RangeOfParagraphToInspect As Range
 			Set RangeOfParagraphToInspect = TargetDocParagraph.Range
 			RangeOfParagraphToInspect.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark.
 			
