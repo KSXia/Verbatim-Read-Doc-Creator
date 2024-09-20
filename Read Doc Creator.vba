@@ -1,5 +1,5 @@
-' ---Read Doc Creator v2.2.0---
-' Updated on 2024-09-19.
+' ---Read Doc Creator v2.2.1---
+' Updated on 2024-09-20.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
 ' Thanks to Truf for creating and providing the original code for activating invisibility mode! You can find Truf's macros on his website at https://debate-decoded.ghost.io/leveling-up-verbatim/
