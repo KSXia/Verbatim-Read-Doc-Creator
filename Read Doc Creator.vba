@@ -409,6 +409,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 					.ClearFormatting
 					.MatchWildcards = True
 					.Text = "( ){2,}"
+					.ParagraphFormat.OutlineLevel = wdOutlineLevelBodyText
 					.Highlight = False
 					.Replacement.ClearFormatting
 					.Replacement.Text = " "
