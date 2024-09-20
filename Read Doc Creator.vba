@@ -346,7 +346,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		.Execute Replace:=wdReplaceAll
 	End With
 	
-	' Remove consecutive paragraph marks in non-highlighted text.
+	' Remove empty paragraphs.
 	With TargetDoc.Content.Find
 		.ClearFormatting
 		.MatchWildcards = True
