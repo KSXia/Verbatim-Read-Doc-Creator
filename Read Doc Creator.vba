@@ -356,7 +356,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		.Execute Replace:=wdReplaceAll
 	End With
 	
-	If Not UseFastMode Then
+	If Not UseFastMode = True Then
 		Dim CharacterIndexToInspect As Long
 		
 		' Remove line breaks surrounded on both sides by highlighted text.
@@ -393,7 +393,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 			End If
 			
 			' If both paragraphs contain highlighted text, join them.
-			If DoesParagraphContainHighlighting And DoesFollowingParagraphContainHighlighting Then
+			If DoesParagraphContainHighlighting = True And DoesFollowingParagraphContainHighlighting = True Then
 				RangeOfParagraphToInspect.InsertAfter " " ' Insert a space after the current paragraph.
 				TargetDocParagraph.Range.Characters.Last.Delete ' Delete the paragraph mark.
 				
