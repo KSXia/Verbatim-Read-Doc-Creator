@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.1.8---
+' ---Read Doc Creator v2.1.9---
 ' Updated on 2024-09-19.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -286,6 +286,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		.ClearFormatting
 		.Text = ""
 		.Style = "Normal"
+		.ParagraphFormat.OutlineLevel = wdOutlineLevelBodyText
 		.Highlight = False
 		.Font.Bold = False
 		.Replacement.ClearFormatting
@@ -298,6 +299,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		.ClearFormatting
 		.Text = ""
 		.Style = "Underline"
+		.ParagraphFormat.OutlineLevel = wdOutlineLevelBodyText
 		.Highlight = False
 		.Replacement.ClearFormatting
 		.Replacement.Text = " "
@@ -309,6 +311,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		.ClearFormatting
 		.Text = ""
 		.Style = "Emphasis"
+		.ParagraphFormat.OutlineLevel = wdOutlineLevelBodyText
 		.Highlight = False
 		.Replacement.ClearFormatting
 		.Replacement.Text = " "
