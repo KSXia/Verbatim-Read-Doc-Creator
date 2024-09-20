@@ -346,11 +346,11 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 		.Execute Replace:=wdReplaceAll
 	End With
 	
-	' Remove empty paragraphs.
+	' Remove empty paragraphs by replacing consecutive paragraph marks with a single paragraph mark.
 	With TargetDoc.Content.Find
 		.ClearFormatting
 		.MatchWildcards = True
-		.Text = "^13{1,}"
+		.Text = "^13{2,}"
 		.Replacement.ClearFormatting
 		.Replacement.Text = "^p"
 		.Execute Replace:=wdReplaceAll
