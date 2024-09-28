@@ -1,4 +1,4 @@
-' ---Read Doc Creator v2.3.0---
+' ---Read Doc Creator v2.3.1---
 ' Updated on 2024-09-27.
 ' This macro consists of 6 sub procedures.
 ' https://github.com/KSXia/Verbatim-Read-Doc-Creator
@@ -457,7 +457,7 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 					If IsParagraphHighlighted(ParagraphIndex) = True Then
 						DoesParagraphContainHighlighting = True
 					ElseIf IsParagraphChecked(ParagraphIndex) = False Then
-						If RangeOfParagraphToInspect.HighlightColorIndex <> wdNoHighlight  Then
+						If RangeOfParagraphToInspect.HighlightColorIndex <> wdNoHighlight Then
 							DoesParagraphContainHighlighting = True
 						End If
 					End If
