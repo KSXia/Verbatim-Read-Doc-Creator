@@ -364,59 +364,141 @@ Sub EnableDestructiveInvisibilityMode(TargetDoc As Document, UseFastMode As Bool
 	End With
 	
 	If Not UseFastMode = True Then
-		Dim CharacterIndexToInspect As Long
+		Dim DoesParagraphContainHighlighting As Boolean
 		
-		' Remove line breaks surrounded on both sides by highlighted text.
-		Dim TargetDocParagraph As Paragraph
-		For Each TargetDocParagraph In TargetDoc.Paragraphs
-			Dim RangeOfParagraphToInspect As Range
-			Set RangeOfParagraphToInspect = TargetDocParagraph.Range
-			RangeOfParagraphToInspect.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark.
+		Dim ParagraphsToSkip() As Boolean
+		
+		Dim CharacterStylesToIgnore() As Variant
+		CharacterStylesToIgnore = Array("Cite", "Tag Char", "Analytic Char")
+		
+		Dim GreatestParagraphIndex As Long
+		GreatestParagraphIndex = 0
+		Dim ParagraphToCount As Paragraph
+		For Each ParagraphToCount In TargetDoc.Paragraphs
+			GreatestParagraphIndex = GreatestParagraphIndex + 1
+		Next ParagraphToCount
+		
+		ReDim ParagraphsToSkip(1 To GreatestParagraphIndex) As Boolean
+		
+		Dim GreatestCharacterStyleToIgnoreIndex As Integer
+		GreatestCharacterStyleToIgnoreIndex = UBound(CharacterStylesToIgnore) - LBound(CharacterStylesToIgnore)
+		
+		On Error Resume Next
+		
+		Dim CurrentCharacterStyleToIgnoreIndex As Integer
+		For CurrentCharacterStyleToIgnoreIndex = 0 To GreatestCharacterStyleToIgnoreIndex Step 1
+			Dim CharacterStyleToIgnore As Style
+			Set CharacterStyleToIgnore = TargetDoc.Styles(CharacterStylesToIgnore(CurrentCharacterStyleToIgnoreIndex))
 			
-			' Check if the current paragraph contains highlighted text.
-			Dim DoesParagraphContainHighlighting As Boolean
-			DoesParagraphContainHighlighting = False
-			Dim LastCharacterIndexToInspect As Long
-			LastCharacterIndexToInspect = RangeOfParagraphToInspect.Characters.Count
-			For CharacterIndexToInspect = 1 To LastCharacterIndexToInspect
-				If RangeOfParagraphToInspect.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
-					DoesParagraphContainHighlighting = True
+			Dim RangeToScanForCharacterStyle As Range
+			Set RangeToScanForCharacterStyle = TargetDoc.Range
+			With RangeToScanForCharacterStyle.Find
+				.ClearFormatting
+				.Text = ""
+				.Style = CharacterStyleToIgnore
+				.Format = True
+				.MatchCase = False
+				.MatchWholeWord = False
+				.MatchWildcards = False
+				.MatchSoundsLike = False
+				.MatchAllWordForms = False
+				.Wrap = wdFindStop
+				Do While .Execute(Forward:=True) = True
+					Dim CurrentParagraphIndex As Long
+					CurrentParagraphIndex = TargetDoc.Range(0, RangeToScanForCharacterStyle.Paragraphs(1).Range.End).Paragraphs.Count
+					ParagraphsToSkip(CurrentParagraphIndex) = True
+				Loop
+			End With
+		Next CurrentCharacterStyleToIgnoreIndex
+		
+		Dim ParagraphStylesToIgnore() As Variant
+		ParagraphStylesToIgnore = Array("Analytic", "Heading 4,Tag", "Heading 3,Block", "Heading 2,Hat", "Heading 1,Pocket", "Undertag")
+		
+		Dim ParagraphIndexToScanForStyles As Long
+		ParagraphIndexToScanForStyles = 0
+		Dim CurrentParagraph As Paragraph
+		For Each CurrentParagraph In TargetDoc.Paragraphs
+			ParagraphIndexToScanForStyles = ParagraphIndexToScanForStyles + 1
+			Dim CurrentParagraphStyleToIgnore As Variant
+			For Each CurrentParagraphStyleToIgnore In ParagraphStylesToIgnore
+				If CurrentParagraph.Style = CurrentParagraphStyleToIgnore Then
+					ParagraphsToSkip(ParagraphIndexToScanForStyles) = True
 					Exit For
 				End If
-			Next CharacterIndexToInspect
-			
-			' Check if the next paragraph exists and contains highlighted text.
-			Dim DoesFollowingParagraphContainHighlighting As Boolean
-			DoesFollowingParagraphContainHighlighting = False
-			If Not TargetDocParagraph.Next Is Nothing Then
-				Dim LastCharacterIndexInNextParagraphToInspect As Long
-				LastCharacterIndexInNextParagraphToInspect = TargetDocParagraph.Next.Range.Characters.Count - 1 ' Ignore the paragraph mark.
-				For CharacterIndexToInspect = 1 To LastCharacterIndexInNextParagraphToInspect
-					If TargetDocParagraph.Next.Range.Characters(CharacterIndexToInspect).HighlightColorIndex <> wdNoHighlight Then
-						DoesFollowingParagraphContainHighlighting = True
-						Exit For
-					End If
-				Next CharacterIndexToInspect
+			Next CurrentParagraphStyleToIgnore
+		Next CurrentParagraph
+		
+		On Error GoTo 0
+		
+		Dim ParagraphToInspect As Paragraph
+		Dim RangeOfParagraphToInspect As Range
+		
+		Dim IsParagraphHighlighted() As Boolean
+		ReDim IsParagraphHighlighted(1 To GreatestParagraphIndex) As Boolean
+		
+		Dim IsParagraphChecked() As Boolean
+		ReDim IsParagraphChecked(1 To GreatestParagraphIndex) As Boolean
+		
+		Dim ParagraphIndex As Long
+		ParagraphIndex = 1
+		' Remove line breaks surrounded on both sides by highlighted text.
+		For Each ParagraphToInspect In TargetDoc.Paragraphs
+			If ParagraphIndex = GreatestParagraphIndex Then
+				Exit For
 			End If
-			
-			' If both paragraphs contain highlighted text, join them.
-			If DoesParagraphContainHighlighting = True And DoesFollowingParagraphContainHighlighting = True Then
-				RangeOfParagraphToInspect.InsertAfter " " ' Insert a space after the current paragraph.
-				TargetDocParagraph.Range.Characters.Last.Delete ' Delete the paragraph mark.
+		
+			If ParagraphsToSkip(ParagraphIndex) = False And ParagraphsToSkip(ParagraphIndex+1) = False Then
+				Set RangeOfParagraphToInspect = ParagraphToInspect.Range
+				RangeOfParagraphToInspect.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark.
 				
-				' Remove any consecutive non-highlighted spaces the inserted space may have formed.
-				With TargetDoc.Content.Find
-					.ClearFormatting
-					.MatchWildcards = True
-					.Text = "( ){2,}"
-					.ParagraphFormat.OutlineLevel = wdOutlineLevelBodyText
-					.Highlight = False
-					.Replacement.ClearFormatting
-					.Replacement.Text = " "
-					.Execute Replace:=wdReplaceAll
-				End With
+				Dim CharacterIndexToInspect As Long
+				' Check if the current paragraph contains highlighted text.
+					DoesParagraphContainHighlighting = False
+					If IsParagraphHighlighted(ParagraphIndex) = True Then
+						DoesParagraphContainHighlighting = True
+					ElseIf IsParagraphChecked(ParagraphIndex) = False Then
+						If RangeOfParagraphToInspect.HighlightColorIndex <> wdNoHighlight  Then
+							DoesParagraphContainHighlighting = True
+						End If
+					End If
+				
+				If DoesParagraphContainHighlighting = True Then
+					' Check if the next paragraph exists and contains highlighted text.
+					Dim DoesFollowingParagraphContainHighlighting As Boolean
+					DoesFollowingParagraphContainHighlighting = False
+					If Not ParagraphToInspect.Next Is Nothing Then
+						Dim RangeOfFollowingParagraphToInspectForHighlighting As Range
+						Set RangeOfFollowingParagraphToInspectForHighlighting = ParagraphToInspect.Next.Range
+						RangeOfFollowingParagraphToInspectForHighlighting.MoveEnd wdCharacter, -1 ' Ignore the paragraph mark.
+						
+						If RangeOfFollowingParagraphToInspectForHighlighting.HighlightColorIndex <> wdNoHighlight Then
+							DoesFollowingParagraphContainHighlighting = True
+								IsParagraphHighlighted(ParagraphIndex+1) = True
+						End If
+						IsParagraphChecked(ParagraphIndex+1) = True
+					End If
+					
+					' If both paragraphs contain highlighted text, join them.
+					If DoesParagraphContainHighlighting = True And DoesFollowingParagraphContainHighlighting = True Then
+						RangeOfParagraphToInspect.InsertAfter " " ' Insert a space after the current paragraph.
+						ParagraphToInspect.Range.Characters.Last.Delete ' Delete the paragraph mark
+						
+						' Remove any consecutive non-highlighted spaces the inserted space may have formed.
+						With TargetDoc.Content.Find
+							.ClearFormatting
+							.MatchWildcards = True
+							.Text = "( ){2,}"
+							.ParagraphFormat.OutlineLevel = wdOutlineLevelBodyText
+							.Highlight = False
+							.Replacement.ClearFormatting
+							.Replacement.Text = " "
+							.Execute Replace:=wdReplaceAll
+						End With
+					End If
+				End If
 			End If
-		Next TargetDocParagraph
+			ParagraphIndex = ParagraphIndex + 1
+		Next ParagraphToInspect
 	End If
 	
 	' Clean up modified find and replace settings.
